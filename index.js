@@ -15,7 +15,7 @@ Compass
   }).init(() => {
 
     Compass.watch(heading => {
-      print('heading', heading);
+      print(heading);
     });
 
   });
