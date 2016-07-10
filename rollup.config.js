@@ -13,7 +13,9 @@ export default {
     commonjs(),
 
     babel({
+      presets: ['es2015-rollup'],
       exclude: 'node_modules/**',
+      babelrc: false
     }),
   ],
   dest: 'build/index.js',

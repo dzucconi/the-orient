@@ -1,1 +1,3 @@
-console.log('Hello world.');
+import foo from './lib/foo';
+
+document.body.innerHTML = foo('foo');
