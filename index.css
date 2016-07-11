@@ -1,3 +1,30 @@
 body {
   margin: 0;
+  background-color: black;
+  color: white;
 }
+
+#stage {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-family: 'Arial Black', sans-serif;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 1px;
+  font-size: 20px;
+  line-height: 1;
+}
+
+#debug {
+  display: block;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0.25;
+  height: 25%;
+}
+  #debug:hover {
+    opacity: 1;
+  }

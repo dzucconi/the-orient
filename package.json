@@ -8,7 +8,7 @@
     "watch-html": "pug --watch ./index.pug --out build/",
     "watch-css": "postcss --watch --use autoprefixer index.css -d build/",
     "watch-js": "rollup -w -c",
-    "watch": "npm run watch-html & npm run watch-js & npm run watch-css",
+    "watch": "NODE_ENV=development npm run watch-html & npm run watch-js & npm run watch-css",
     "sync": "browser-sync start --files \"build/*\" --server build",
     "start": "npm run watch & npm run sync",
     "build-html": "pug ./index.pug --out build/",
@@ -41,5 +41,8 @@
     "s3-cli": "^0.13.0",
     "should": "^9.0.2",
     "uglify-js": "^2.7.0"
+  },
+  "dependencies": {
+    "ramda": "^0.21.0"
   }
 }

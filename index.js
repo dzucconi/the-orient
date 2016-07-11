@@ -1,21 +1,43 @@
 import './vendor/compass.min';
+import box from './lib/box';
+
+const stage = document.getElementById('stage');
 
 const print = x =>
-  document.body.innerHTML = x;
+  stage.innerHTML = x;
 
-Compass.noSupport(() => {
-  print('Not supported');
-});
+const display = heading => {
+  const { abbreviation } = box(heading);
+  print(`
+    ${abbreviation}<br>
+    ${heading}°
+  `);
+};
+
+const init = () => {
+  Compass.watch(display);
+};
+
+const debug = () => {
+  const compass = document.getElementById('debug');
+
+  if (!compass) return;
+
+  compass.addEventListener('input', e => {
+    display(e.target.value);
+  });
+};
 
 Compass
-  .needGPS(() => {
-    print('we need GPS signal');
-  }).needMove(() => {
-    print('user must go forward');
-  }).init(() => {
+  .noSupport(() =>
+    print('Not supported'))
 
-    Compass.watch(heading => {
-      print(heading);
-    });
+  .needGPS(() =>
+    print('Needs GPS signal'))
 
-  });
+  .needMove(() =>
+    print('Move forward'))
+
+  .init(init);
+
+debug();
