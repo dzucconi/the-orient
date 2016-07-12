@@ -4,10 +4,7 @@ body {
   color: white;
 }
 
-#stage {
-  position: absolute;
-  top: 20px;
-  left: 20px;
+.type {
   font-family: 'Arial Black', sans-serif;
   font-weight: bold;
   -webkit-font-smoothing: antialiased;
@@ -16,15 +13,66 @@ body {
   line-height: 1;
 }
 
+#heading {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+#traditional {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
 #debug {
   display: block;
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  opacity: 0.25;
+  opacity: 0;
   height: 25%;
 }
   #debug:hover {
     opacity: 1;
   }
+
+.direction {
+  position: absolute;
+  z-index: -1;
+  transition: opacity 0.125s;
+  opacity: 0;
+}
+
+#north {
+  background-color: red;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 25%;
+}
+
+#south {
+  background-color: blue;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 25%;
+}
+
+#east {
+  background-color: yellow;
+  top: 25%;
+  right: 0;
+  height: 50%;
+  width: 50%;
+}
+
+#west {
+  background-color: green;
+  top: 25%;
+  left: 0;
+  height: 50%;
+  width: 50%;
+}
