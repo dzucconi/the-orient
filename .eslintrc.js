@@ -5,6 +5,9 @@ module.exports = {
     "node": true,
     "mocha": true
   },
+  "globals": {
+    "Compass": false,
+  },
   "extends": "eslint:recommended",
   "parserOptions": {
     "sourceType": "module"
