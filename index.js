@@ -1,51 +1,17 @@
 import './vendor/compass.min';
 
 import box from './lib/box';
-import scale from './lib/scale';
+
+import compass from './lib/compass';
 
 const STATE = {
   heading: null,
 };
 
-const scalar = scale(0.0, 1.0);
-
 const heading = document.getElementById('heading');
 const traditional = document.getElementById('traditional');
 
-const compass = [
-  {
-    id: 'north',
-    el: document.getElementById('north'),
-    between: [
-      scalar(270.0, 360.0),
-      scalar(90.0, 0.0),
-    ]
-  },
-  {
-    id: 'east',
-    el: document.getElementById('east'),
-    between: [
-      scalar(0.0, 90.0),
-      scalar(180.0, 90.0),
-    ]
-  },
-  {
-    id: 'south',
-    el: document.getElementById('south'),
-    between: [
-      scalar(270.0, 180.0),
-      scalar(0.0, 180.0),
-    ]
-  },
-  {
-    id: 'west',
-    el: document.getElementById('west'),
-    between: [
-      scalar(180.0, 270.0),
-      scalar(360.0, 270.0),
-    ]
-  },
-];
+const COMPASS = compass(document);
 
 const print = (x, el) =>
   (el || heading).innerHTML = x;
@@ -69,7 +35,7 @@ const update = heading => {
 
   print(`
     ${abbreviation}<br>
-    ${heading}°
+    ${parseFloat(heading).toFixed(1)}°
   `);
 
   print(
@@ -77,7 +43,7 @@ const update = heading => {
     traditional
   );
 
-  compass
+  COMPASS
     .map(notify)
     .map(fn => fn(heading));
 };
@@ -94,13 +60,13 @@ const init = () => {
 };
 
 const debug = () => {
-  const compass = document.getElementById('debug');
+  const range = document.getElementById('debug');
 
-  if (!compass) return;
+  if (!range) return;
 
-  compass.addEventListener('input', e => {
-    update(e.target.value);
-  });
+  range.addEventListener('input', e =>
+    update(e.target.value)
+  );
 };
 
 Compass

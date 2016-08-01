@@ -13,6 +13,6 @@ describe('#box', () => {
 
   it('accepts a heading Float and returns the appropriate heading data (354.37)', () => {
     box(354.37).compass_point
-      .should.equal('North by west')
+      .should.equal('North by west');
   });
 });
