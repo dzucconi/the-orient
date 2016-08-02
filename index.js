@@ -2,6 +2,7 @@ import './vendor/compass.min';
 
 import box from './lib/box';
 import compass, { applicator } from './lib/compass';
+import voice from './lib/voice';
 
 const STATE = {};
 const COMPASS = compass(document);
@@ -36,7 +37,7 @@ const init = () => {
 
   setInterval(() => {
     if (STATE.point) {
-      new Audio(`mp3/${STATE.point.compass_point}.mp3`)
+      voice[STATE.point.compass_point]
         .play();
     }
   }, 2500);
