@@ -2,7 +2,7 @@ import './vendor/compass.min';
 
 import box from './lib/box';
 import compass, { applicator } from './lib/compass';
-import voice from './lib/voice';
+import VOICE, { preload } from './lib/voice';
 
 const STATE = {};
 const COMPASS = compass(document);
@@ -37,20 +37,32 @@ const update = heading => {
 const init = () => {
   Compass.watch(update);
 
-  document.body.addEventListener('click', () => {
+  const increment = () => {
+    if (!STATE.representations.length) return;
+
     if (STATE.representation >= STATE.representations.length - 1) {
       STATE.representation = 0;
     } else {
       STATE.representation = (STATE.representation || 0) + 1;
     }
-  });
+  };
 
-  setInterval(() => {
-    if (STATE.point) {
-      voice[STATE.point.compass_point]
-        .play();
-    }
-  }, 2500);
+  document.body.addEventListener('click', increment);
+  document.body.addEventListener('touchstart', increment);
+
+  const initializer = document.createElement('a');
+  initializer.id = 'initializer';
+  document.body.appendChild(initializer);
+  initializer.addEventListener('click', () => {
+    initializer.parentNode.removeChild(initializer);
+    preload();
+
+    setInterval(() => {
+      if (STATE.point) {
+        VOICE[STATE.point.compass_point].play();
+      }
+    }, 2500);
+  });
 };
 
 const debug = () => {
@@ -58,10 +70,10 @@ const debug = () => {
 
   if (!range) return;
 
-  range.addEventListener('click', e =>
-    e.stopPropagation()
-  );
+  const stopPropagation = e => e.stopPropagation();
 
+  range.addEventListener('click', stopPropagation);
+  range.addEventListener('touchstart', stopPropagation);
   range.addEventListener('input', e =>
     update(e.target.value)
   );
