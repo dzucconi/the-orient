@@ -3,43 +3,28 @@ import './vendor/compass.min';
 import box from './lib/box';
 import compass, { applicator } from './lib/compass';
 
-const STATE = {
-  heading: null,
-};
-
-const heading = document.getElementById('heading');
-const traditional = document.getElementById('traditional');
-
+const STATE = {};
 const COMPASS = compass(document);
 
-const print = (x, el) =>
-  (el || heading).innerHTML = x;
+const display = document.getElementById('display');
 
-const notify = ({ el, near }) => heading => {
+const print = (x, el) =>
+  (el || display).innerHTML = x;
+
+const notify = ({ el, near }) => heading =>
   el.style.opacity = near(heading);
-};
 
 const update = heading => {
-  STATE.heading = heading;
-
   const point = box(heading);
 
+  STATE.heading = heading;
   STATE.point = point;
 
-  const {
-    abbreviation,
-    traditional_wind_point,
-  } = point;
-
   print(`
-    ${abbreviation}<br>
-    ${parseFloat(heading).toFixed(1)}°
+    ${point.abbreviation}<br>
+    ${parseFloat(heading).toFixed(1)}°<br>
+    ${point.traditional_wind_point}
   `);
-
-  print(
-    traditional_wind_point,
-    traditional
-  );
 
   COMPASS
     .map(notify)
@@ -69,13 +54,13 @@ const debug = () => {
 
 Compass
   .noSupport(() =>
-    print('Not supported'))
+    print('Your device is unsupported'))
 
   .needGPS(() =>
-    print('Needs GPS signal'))
+    print('A GPS signal is needed'))
 
   .needMove(() =>
-    print('Move forward'))
+    print('Please move forward'))
 
   .init(init);
 
