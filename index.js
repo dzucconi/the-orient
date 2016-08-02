@@ -20,12 +20,14 @@ const update = heading => {
 
   STATE.heading = heading;
   STATE.point = point;
+  STATE.representations = [
+    '',
+    point.abbreviation,
+    `${parseFloat(heading).toFixed(1)}°`,
+    point.traditional_wind_point,
+  ];
 
-  print(`
-    ${point.abbreviation}<br>
-    ${parseFloat(heading).toFixed(1)}°<br>
-    ${point.traditional_wind_point}
-  `);
+  print(STATE.representations[STATE.representation || 0]);
 
   COMPASS
     .map(notify)
@@ -34,6 +36,14 @@ const update = heading => {
 
 const init = () => {
   Compass.watch(update);
+
+  document.body.addEventListener('click', () => {
+    if (STATE.representation >= STATE.representations.length - 1) {
+      STATE.representation = 0;
+    } else {
+      STATE.representation = (STATE.representation || 0) + 1;
+    }
+  });
 
   setInterval(() => {
     if (STATE.point) {
@@ -47,6 +57,10 @@ const debug = () => {
   const range = document.getElementById('debug');
 
   if (!range) return;
+
+  range.addEventListener('click', e =>
+    e.stopPropagation()
+  );
 
   range.addEventListener('input', e =>
     update(e.target.value)
