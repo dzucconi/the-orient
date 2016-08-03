@@ -48,6 +48,7 @@
     "uglify-js": "^2.7.0"
   },
   "dependencies": {
-    "ramda": "^0.21.0"
+    "ramda": "^0.21.0",
+    "whatwg-fetch": "^1.0.0"
   }
 }
