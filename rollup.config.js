@@ -7,7 +7,7 @@ export default {
   plugins: [
     nodeResolve({
       jsnext: true,
-      main: true
+      main: true,
     }),
 
     commonjs(),
@@ -15,7 +15,7 @@ export default {
     babel({
       presets: ['es2015-rollup'],
       exclude: 'node_modules/**',
-      babelrc: false
+      babelrc: false,
     }),
   ],
   dest: 'build/index.js',
