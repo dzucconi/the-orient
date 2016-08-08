@@ -1,9 +1,11 @@
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
+import replace from 'rollup-plugin-replace';
 
-export default {
-  entry: 'index.js',
+export default name => ({
+  entry: `${name}.js`,
+
   plugins: [
     nodeResolve({
       jsnext: true,
@@ -17,6 +19,11 @@ export default {
       exclude: 'node_modules/**',
       babelrc: false,
     }),
+
+    replace({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    }),
   ],
-  dest: 'build/index.js',
-};
+
+  dest: `build/${name}.js`,
+});
