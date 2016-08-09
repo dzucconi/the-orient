@@ -1,10 +1,18 @@
+/* eslint-disable no-console */
+
 import './vendor/compass.min';
+import Fingerprint2 from 'fingerprintjs2';
 import post from './lib/post';
 
-const STATE = {};
-const ENDPOINT = 'https://damonzucconi-spiritual-door.herokuapp.com/api/headings';
+const dz = window.dz;
 
-const sample = (state, rate = 2000) => {
+const STATE = {};
+const BASE = process.env.NODE_ENV === 'development' ?
+  'http://localhost:9292' :
+  'https://spiritualdoor-api.herokuapp.com';
+const ENDPOINT = `${BASE}/api/headings`;
+
+const sample = (state, rate = 1000) => {
   console.info('Initializing sampler');
 
   setInterval(() => {
@@ -12,6 +20,7 @@ const sample = (state, rate = 2000) => {
 
     post(ENDPOINT, {
       value: state.heading,
+      fingerprint: state.fingerprint,
       rate: rate,
     });
   }, rate);
@@ -32,5 +41,10 @@ Compass
       STATE.heading = heading
     );
 
-    sample(STATE);
+    sample(STATE, (dz && dz.sd && dz.sd.rate));
   });
+
+new Fingerprint2()
+  .get(fingerprint =>
+    STATE.fingerprint = fingerprint
+  );

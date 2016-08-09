@@ -49,6 +49,7 @@
     "uglify-js": "^2.7.0"
   },
   "dependencies": {
+    "fingerprintjs2": "^1.4.1",
     "ramda": "^0.21.0",
     "whatwg-fetch": "^1.0.0"
   }
