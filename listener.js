@@ -4,47 +4,53 @@ import './vendor/compass.min';
 import Fingerprint2 from 'fingerprintjs2';
 import post from './lib/post';
 
-const dz = window.dz;
+(function() {
+  'use strict';
 
-const STATE = {};
-const BASE = process.env.NODE_ENV === 'development' ?
-  'http://localhost:9292' :
-  'https://spiritualdoor-api.herokuapp.com';
-const ENDPOINT = `${BASE}/api/headings`;
+  const config = (window.dz && window.dz.sd) || {};
 
-const sample = (state, rate = 1000) => {
-  console.info('Initializing sampler');
+  const STATE = {};
+  const LOG = process.env.NODE_ENV === 'development';
+  const BASE = process.env.NODE_ENV === 'development' ?
+    'http://localhost:9292' :
+    'https://spiritualdoor-api.herokuapp.com';
+  const ENDPOINT = `${BASE}/api/headings`;
 
-  setInterval(() => {
-    if (!state.heading) return;
+  const sample = (state, rate = 1000) => {
+    if (LOG) console.info('Initializing sampler');
 
-    post(ENDPOINT, {
-      value: state.heading,
-      fingerprint: state.fingerprint,
-      rate: rate,
+    setInterval(() => {
+      if (!state.heading) return;
+
+      post(ENDPOINT, {
+        value: state.heading,
+        fingerprint: state.fingerprint,
+        rate: rate,
+      });
+    }, rate);
+  };
+
+  Compass
+    .noSupport(() => {
+      if (LOG) console.warn('Your device is unsupported');
+    })
+    .needGPS(() => {
+      if (LOG) console.warn('A GPS signal is needed');
+    })
+    .needMove(() => {
+      if (LOG) console.warn('Please move forward');
+    })
+    .init(method => {
+      if (LOG) console.info(`Method: ${method}`);
+    })
+    .watch(heading => {
+      STATE.heading = heading;
     });
-  }, rate);
-};
 
-Compass
-  .noSupport(() =>
-    console.warn('Your device is unsupported'))
+  new Fingerprint2()
+    .get(fingerprint => {
+      STATE.fingerprint = fingerprint;
+    });
 
-  .needGPS(() =>
-    console.warn('A GPS signal is needed'))
-
-  .needMove(() =>
-    console.warn('Please move forward'))
-
-  .init(() => {
-    Compass.watch(heading =>
-      STATE.heading = heading
-    );
-
-    sample(STATE, (dz && dz.sd && dz.sd.rate));
-  });
-
-new Fingerprint2()
-  .get(fingerprint =>
-    STATE.fingerprint = fingerprint
-  );
+  sample(STATE, config.rate);
+})();

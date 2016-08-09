@@ -5,39 +5,46 @@ import compass, { applicator } from './lib/compass';
 import VOICE, { preload } from './lib/voice';
 import moveThrough from './lib/move_through';
 
-const STATE = {};
-const COMPASS = compass(document);
+(function() {
+  const STATE = {};
+  const COMPASS = compass(document);
 
-const display = document.getElementById('display');
+  const display = document.getElementById('display');
 
-const render = (x, el) =>
-  (el || display).innerHTML = x;
+  const render = (x, el) =>
+    (el || display).innerHTML = x;
 
-const notify = ({ el, near }) => heading =>
-  el.style.opacity = near(heading);
+  const notify = ({ el, near }) => heading =>
+    el.style.opacity = near(heading);
 
-const update = heading => {
-  const point = box(heading);
+  const update = heading => {
+    const point = box(heading);
 
-  STATE.point = point;
-  STATE.heading = heading;
+    STATE.point = point;
+    STATE.heading = heading;
 
-  STATE.representations = [
-    '',
-    point.abbreviation,
-    `${parseFloat(heading).toFixed(1)}°`,
-    point.traditional_wind_point,
-  ];
+    STATE.representations = [
+      '',
+      point.abbreviation,
+      `${parseFloat(heading).toFixed(1)}°`,
+      point.traditional_wind_point,
+    ];
 
-  render(STATE.representations[STATE.representation || 0]);
+    render(STATE.representations[STATE.representation || 0]);
 
-  COMPASS
-    .map(notify)
-    .map(applicator(heading));
-};
+    COMPASS
+      .map(notify)
+      .map(applicator(heading));
+  };
 
-const init = () => {
-  Compass.watch(update);
+  Compass
+    .noSupport(() =>
+      render('Your device is unsupported'))
+    .needGPS(() =>
+      render('A GPS signal is needed'))
+    .needMove(() =>
+      render('Please move forward'))
+    .watch(update);
 
   const increment = () => {
     if (!STATE.representations.length) return;
@@ -60,27 +67,15 @@ const init = () => {
       VOICE[STATE.point.compass_point].play();
     }
   }, 2500);
-};
 
-Compass
-  .noSupport(() =>
-    render('Your device is unsupported'))
+  if (process.env.NODE_ENV === 'development') {
+    const range = document.getElementById('debug');
 
-  .needGPS(() =>
-    render('A GPS signal is needed'))
-
-  .needMove(() =>
-    render('Please move forward'))
-
-  .init(init);
-
-if (process.env.NODE_ENV === 'development') {
-  const range = document.getElementById('debug');
-
-  const stopPropagation = e => e.stopPropagation();
-  range.addEventListener('click', stopPropagation);
-  range.addEventListener('touchstart', stopPropagation);
-  range.addEventListener('input', e =>
-    update(e.target.value)
-  );
-}
+    const stopPropagation = e => e.stopPropagation();
+    range.addEventListener('click', stopPropagation);
+    range.addEventListener('touchstart', stopPropagation);
+    range.addEventListener('input', e =>
+      update(e.target.value)
+    );
+  }
+})();
